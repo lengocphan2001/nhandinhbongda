@@ -3,37 +3,31 @@
 @section('title', 'Kết Quả Bóng Đá Hôm Nay, KQ Bóng Đá Anh, C1, C2, La Liga - XOILAC TV')
 
 @section('content')
-<div class="bg-gray-800 rounded-lg p-6">
-
+<div class="bg-gray-800 rounded-lg p-3 sm:p-4 md:p-6 overflow-hidden">
     <!-- Date Navigation -->
-    <div class="mb-6 flex gap-2 items-center overflow-x-auto pb-2">
+    <div class="mb-4 sm:mb-6 flex gap-2 items-center overflow-x-auto pb-2 scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
         @foreach($dateNav as $nav)
         <a href="{{ route('ket-qua', ['d' => $nav['date']]) }}" 
-           class="px-4 py-2 rounded text-sm font-medium whitespace-nowrap transition-colors {{ $nav['date'] === $currentDate ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600' }}">
+           class="px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors {{ $nav['date'] === $currentDate ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600' }}">
             @if($nav['is_today'])
                 Hôm Nay
             @else
-                {{ $nav['day_name'] }}
+                <span class="hidden sm:inline">{{ $nav['day_name'] }} </span>
             @endif
             {{ $nav['display'] }}
         </a>
         @endforeach
-        <button class="px-3 py-2 text-gray-400 hover:text-white">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
     </div>
     
     <!-- League List Link -->
     <div class="mb-4">
-        <a href="#" class="text-green-400 hover:text-green-300 text-sm">Danh sách giải đấu</a>
+        <a href="#" class="text-green-400 hover:text-green-300 text-xs sm:text-sm">Danh sách giải đấu</a>
     </div>
     
     <!-- Results Section -->
-    <div class="space-y-6">
+    <div class="space-y-4 sm:space-y-6">
         @if(empty($groupedResults))
-            <div class="text-center py-12 text-gray-400">
+            <div class="text-center py-12 text-gray-400 text-sm sm:text-base">
                 <p>Không có kết quả nào vào ngày {{ \Carbon\Carbon::parse($currentDate)->format('d/m/Y') }}</p>
             </div>
         @else
@@ -45,26 +39,26 @@
                     $leagueName = $league['name'] ?? 'Unknown League';
                 @endphp
                 
-                <div class="mb-6">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-bold text-white">
-                            {{ $countryName ? $countryName . ': ' : '' }}{{ $leagueName }}
+                <div class="mb-4 sm:mb-6">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white truncate pr-2">
+                            <span class="truncate block">{{ $countryName ? $countryName . ': ' : '' }}{{ $leagueName }}</span>
                             @if(count($matches) > 0)
-                                <span class="text-gray-400 text-sm font-normal">({{ count($matches) }})</span>
+                                <span class="text-gray-400 text-xs sm:text-sm font-normal">({{ count($matches) }})</span>
                             @endif
                         </h2>
                         <a href="{{ route('bang-xep-hang', ['league_id' => $leagueId]) }}" 
-                           class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-sm text-white rounded transition-colors">
+                           class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-green-600 hover:bg-green-700 text-xs sm:text-sm text-white rounded transition-colors flex-shrink-0 self-start sm:self-auto">
                             <span>BXH</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </a>
                     </div>
                     
                     <div class="bg-gray-900 rounded-lg overflow-hidden">
-                        <!-- Table Header -->
-                        <div class="grid grid-cols-11 gap-2 bg-gray-700 px-4 py-2 text-xs font-semibold text-gray-300">
+                        <!-- Desktop Table Header (hidden on mobile) -->
+                        <div class="hidden md:grid md:grid-cols-11 gap-2 bg-gray-700 px-4 py-2 text-xs font-semibold text-gray-300">
                             <div class="col-span-3">Trận đấu</div>
                             <div class="col-span-1 text-center">Tỷ số</div>
                             <div class="col-span-1 text-center">Hiệp 1</div>
@@ -157,34 +151,125 @@
                                 }
                             @endphp
                             
-                            <div class="grid grid-cols-11 gap-2 px-4 py-3 border-b border-gray-700 hover:bg-gray-800 transition-colors">
-                                <!-- Match Info -->
-                                <div class="col-span-3 flex items-center gap-2">
-                                    <div class="text-xs text-gray-400 mb-2">Kết thúc</div>
-                                    <!-- Home Team -->
-
+                            <!-- Mobile Card Layout -->
+                            <div class="md:hidden border-b border-gray-700 hover:bg-gray-800 transition-colors p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="text-xs text-gray-400">Kết thúc</div>
+                                    <div class="flex items-center gap-3">
+                                        @if($homeScore !== '' && $awayScore !== '')
+                                            <div class="text-white font-bold text-base">{{ $homeScore }} - {{ $awayScore }}</div>
+                                        @else
+                                            <div class="text-gray-400 text-sm">-</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <!-- Teams -->
+                                <div class="space-y-2 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        @if($homeLogo)
+                                            <img src="{{ $homeLogo }}" alt="{{ $homeTeamName }}" class="w-5 h-5 object-contain flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0" style="display: none;">{{ substr($homeTeamName, 0, 1) }}</div>
+                                        @else
+                                            <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0">{{ substr($homeTeamName, 0, 1) }}</div>
+                                        @endif
+                                        <span class="text-white text-sm truncate min-w-0 flex-1">{{ $homeTeamName }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        @if($awayLogo)
+                                            <img src="{{ $awayLogo }}" alt="{{ $awayTeamName }}" class="w-5 h-5 object-contain flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0" style="display: none;">{{ substr($awayTeamName, 0, 1) }}</div>
+                                        @else
+                                            <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0">{{ substr($awayTeamName, 0, 1) }}</div>
+                                        @endif
+                                        <span class="text-white text-sm truncate min-w-0 flex-1">{{ $awayTeamName }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Odds - Mobile -->
+                                <div class="grid grid-cols-3 gap-3 text-xs">
                                     <div>
-                                        <div class="flex items-center gap-2 mb-1">
-                                            @if($homeLogo)
-                                                <img src="{{ $homeLogo }}" alt="{{ $homeTeamName }}" class="w-5 h-5 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white" style="display: none;">{{ substr($homeTeamName, 0, 1) }}</div>
-                                            @else
-                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white">{{ substr($homeTeamName, 0, 1) }}</div>
-                                            @endif
-                                            <span class="text-white text-sm">{{ $homeTeamName }}</span>
-                                        </div>
-                                        <!-- Away Team -->
-                                        <div class="flex items-center gap-2">
-                                            @if($awayLogo)
-                                                <img src="{{ $awayLogo }}" alt="{{ $awayTeamName }}" class="w-5 h-5 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white" style="display: none;">{{ substr($awayTeamName, 0, 1) }}</div>
-                                            @else
-                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white">{{ substr($awayTeamName, 0, 1) }}</div>
-                                            @endif
-                                            <span class="text-white text-sm">{{ $awayTeamName }}</span>
+                                        <div class="text-gray-400 mb-1">Hiệp 1</div>
+                                        @if($htHomeScore !== '' && $htAwayScore !== '')
+                                            <div class="text-gray-300">{{ $htHomeScore }} - {{ $htAwayScore }}</div>
+                                        @else
+                                            <div class="text-gray-500">-</div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400 mb-1">Cược chấp</div>
+                                        @if($handicap && is_array($handicap))
+                                            @php
+                                                $handicapValue = $handicap['handicap'] ?? '0';
+                                                $homeOdds = $handicap['home'] ?? '-';
+                                                $awayOdds = $handicap['away'] ?? '-';
+                                            @endphp
+                                            <div class="text-gray-300">{{ $handicapValue }}</div>
+                                            <div class="text-green-400">{{ $homeOdds }} / {{ $awayOdds }}</div>
+                                        @else
+                                            <div class="text-gray-500">-</div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400 mb-1">Tài/Xỉu</div>
+                                        @if($overUnder && is_array($overUnder))
+                                            @php
+                                                $totalValue = $overUnder['handicap'] ?? '2.5';
+                                                $overOdds = $overUnder['over'] ?? '-';
+                                                $underOdds = $overUnder['under'] ?? '-';
+                                            @endphp
+                                            <div class="text-gray-300">{{ $totalValue }}</div>
+                                            <div class="text-green-400">{{ $overOdds }} / {{ $underOdds }}</div>
+                                        @else
+                                            <div class="text-gray-500">-</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                @if($odds1X2 && is_array($odds1X2))
+                                    @php
+                                        $homeWin = $odds1X2['home'] ?? '-';
+                                        $draw = $odds1X2['draw'] ?? '-';
+                                        $awayWin = $odds1X2['away'] ?? '-';
+                                    @endphp
+                                    <div class="mt-3 pt-3 border-t border-gray-700">
+                                        <div class="text-gray-400 text-xs mb-2">1X2</div>
+                                        <div class="flex gap-4 text-green-400 text-xs">
+                                            <div>1: {{ $homeWin }}</div>
+                                            <div>X: {{ $draw }}</div>
+                                            <div>2: {{ $awayWin }}</div>
                                         </div>
                                     </div>
-                                    
+                                @endif
+                            </div>
+                            
+                            <!-- Desktop Table Row -->
+                            <div class="hidden md:grid md:grid-cols-11 gap-2 px-4 py-3 border-b border-gray-700 hover:bg-gray-800 transition-colors">
+                                <!-- Match Info -->
+                                <div class="col-span-3 flex items-center gap-2 min-w-0">
+                                    <div class="text-xs text-gray-400 mb-2 hidden lg:block">Kết thúc</div>
+                                    <div class="flex-1 min-w-0">
+                                        <!-- Home Team -->
+                                        <div class="flex items-center gap-2 mb-1 min-w-0">
+                                            @if($homeLogo)
+                                                <img src="{{ $homeLogo }}" alt="{{ $homeTeamName }}" class="w-5 h-5 object-contain flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0" style="display: none;">{{ substr($homeTeamName, 0, 1) }}</div>
+                                            @else
+                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0">{{ substr($homeTeamName, 0, 1) }}</div>
+                                            @endif
+                                            <span class="text-white text-sm truncate min-w-0">{{ $homeTeamName }}</span>
+                                        </div>
+                                        <!-- Away Team -->
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            @if($awayLogo)
+                                                <img src="{{ $awayLogo }}" alt="{{ $awayTeamName }}" class="w-5 h-5 object-contain flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0" style="display: none;">{{ substr($awayTeamName, 0, 1) }}</div>
+                                            @else
+                                                <div class="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-xs text-white flex-shrink-0">{{ substr($awayTeamName, 0, 1) }}</div>
+                                            @endif
+                                            <span class="text-white text-sm truncate min-w-0">{{ $awayTeamName }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <!-- Score -->
@@ -208,7 +293,7 @@
                                 </div>
                                 
                                 <!-- Handicap Odds -->
-                                <div class="col-span-2 text-xs">
+                                <div class="col-span-2 text-xs min-w-0">
                                     @if($handicap && is_array($handicap))
                                         @php
                                             $handicapValue = $handicap['handicap'] ?? '0';
@@ -217,17 +302,13 @@
                                         @endphp
                                         <div class="flex justify-end gap-2">
                                             <!-- Cột 1: Handicap value -->
-                                            <div class="flex items-start">
-                                                <span class="text-gray-300">{{ $handicapValue }}</span>
+                                            <div class="flex items-start flex-shrink-0">
+                                                <span class="text-gray-300 whitespace-nowrap">{{ $handicapValue }}</span>
                                             </div>
                                             <!-- Cột 2: 2 dòng odds -->
-                                            <div class="flex flex-col gap-1 items-start">
-                                                <div>
-                                                    <span class="text-green-400">{{ $homeOdds }}</span>
-                                                </div>
-                                                <div>
-                                                    <span class="text-green-400">{{ $awayOdds }}</span>
-                                                </div>
+                                            <div class="flex flex-col gap-1 items-start min-w-0">
+                                                <div class="text-green-400 truncate w-full">{{ $homeOdds }}</div>
+                                                <div class="text-green-400 truncate w-full">{{ $awayOdds }}</div>
                                             </div>
                                         </div>
                                     @else
@@ -236,7 +317,7 @@
                                 </div>
                                 
                                 <!-- Over/Under Odds -->
-                                <div class="col-span-2 text-xs">
+                                <div class="col-span-2 text-xs min-w-0">
                                     @if($overUnder && is_array($overUnder))
                                         @php
                                             $totalValue = $overUnder['handicap'] ?? '2.5';
@@ -245,17 +326,13 @@
                                         @endphp
                                         <div class="flex items-start justify-end gap-2">
                                             <!-- Cột 1: Handicap value -->
-                                            <div class="flex items-end">
-                                                <span class="text-gray-300">{{ $totalValue }}</span>
+                                            <div class="flex items-end flex-shrink-0">
+                                                <span class="text-gray-300 whitespace-nowrap">{{ $totalValue }}</span>
                                             </div>
                                             <!-- Cột 2: 2 dòng odds -->
-                                            <div class="flex flex-col gap-1 items-start">
-                                                <div>
-                                                    <span class="text-green-400">{{ $overOdds }}</span>
-                                                </div>
-                                                <div>
-                                                    <span class="text-green-400">{{ $underOdds }}</span>
-                                                </div>
+                                            <div class="flex flex-col gap-1 items-start min-w-0">
+                                                <div class="text-green-400 truncate w-full">{{ $overOdds }}</div>
+                                                <div class="text-green-400 truncate w-full">{{ $underOdds }}</div>
                                             </div>
                                         </div>
                                     @else
@@ -264,7 +341,7 @@
                                 </div>
                                 
                                 <!-- 1X2 Odds -->
-                                <div class="col-span-2 text-xs">
+                                <div class="col-span-2 text-xs min-w-0">
                                     @if($odds1X2 && is_array($odds1X2))
                                         @php
                                             $homeWin = $odds1X2['home'] ?? '-';
@@ -272,15 +349,9 @@
                                             $awayWin = $odds1X2['away'] ?? '-';
                                         @endphp
                                         <div class="flex flex-col gap-1 items-end">
-                                            <div>
-                                                <span class="text-green-400">{{ $homeWin }}</span>
-                                            </div>
-                                            <div>
-                                                <span class="text-green-400">{{ $draw }}</span>
-                                            </div>
-                                            <div>
-                                                <span class="text-green-400">{{ $awayWin }}</span>
-                                            </div>
+                                            <div class="text-green-400 truncate w-full text-right">{{ $homeWin }}</div>
+                                            <div class="text-green-400 truncate w-full text-right">{{ $draw }}</div>
+                                            <div class="text-green-400 truncate w-full text-right">{{ $awayWin }}</div>
                                         </div>
                                     @else
                                         <div class="text-end text-gray-500">-</div>
@@ -294,4 +365,24 @@
         @endif
     </div>
 </div>
+
+@push('styles')
+<style>
+    /* Hide scrollbar but keep functionality */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Ensure text doesn't overflow */
+    .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+@endpush
 @endsection

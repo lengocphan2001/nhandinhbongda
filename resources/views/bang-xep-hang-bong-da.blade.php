@@ -3,22 +3,22 @@
 @section('title', 'Bảng Xếp Hạng Bóng Đá - XOILAC TV')
 
 @section('content')
-<div class="bg-gray-800 rounded-lg p-6">
+<div class="bg-gray-800 rounded-lg p-3 sm:p-4 md:p-6 overflow-hidden">
     <!-- League Selector with Search -->
-    <div class="mb-6">
-        <div class="flex gap-4 items-start">
+    <div class="mb-4 sm:mb-6">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-start">
             <!-- Search Input -->
-            <div class="relative w-full max-w-md flex-1">
+            <div class="relative w-full sm:max-w-md sm:flex-1 min-w-0">
                 <input 
                     type="text" 
                     id="leagueSearch" 
                     placeholder="Tìm kiếm giải đấu..." 
-                    class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded border border-gray-600 hover:border-green-500 focus:outline-none focus:border-green-500 transition-colors"
+                    class="w-full bg-gray-700 text-white px-3 sm:px-4 py-2 pr-10 rounded border border-gray-600 hover:border-green-500 focus:outline-none focus:border-green-500 transition-colors text-sm sm:text-base"
                     autocomplete="off"
                     value="{{ $selectedLeague ? $selectedLeague['name'] : '' }}"
                 >
                 <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
@@ -29,10 +29,10 @@
             </div>
             
             <!-- Select Dropdown -->
-            <div class="relative">
+            <div class="relative w-full sm:w-auto sm:min-w-[200px] md:min-w-[250px]">
                 <select 
                     id="leagueSelect" 
-                    class="bg-gray-700 text-white px-4 py-2 pr-8 rounded border border-gray-600 hover:border-green-500 focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer min-w-[250px]"
+                    class="w-full sm:w-auto bg-gray-700 text-white px-3 sm:px-4 py-2 pr-8 rounded border border-gray-600 hover:border-green-500 focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base"
                 >
                     <option value="">-- Chọn giải đấu --</option>
                     @foreach($leagues as $league)
@@ -49,9 +49,9 @@
             </div>
         </div>
         
-        <div id="selectedLeagueInfo" class="mt-2 text-sm text-gray-400" style="display: {{ $selectedLeague ? 'block' : 'none' }};">
+        <div id="selectedLeagueInfo" class="mt-2 text-xs sm:text-sm text-gray-400 truncate" style="display: {{ $selectedLeague ? 'block' : 'none' }};">
             @if($selectedLeague)
-            Đang hiển thị: <span class="text-green-400 font-semibold">{{ $selectedLeague['name'] }}</span>
+            Đang hiển thị: <span class="text-green-400 font-semibold inline-block max-w-full">{{ $selectedLeague['name'] }}</span>
             @if($selectedLeague['country_name'])
                 <span class="text-gray-500">({{ $selectedLeague['country_name'] }})</span>
             @endif
@@ -60,18 +60,18 @@
     </div>
     
     <!-- Loading Indicator -->
-    <div id="loadingIndicator" class="hidden text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
-        <p class="mt-4 text-gray-400">Đang tải dữ liệu...</p>
+    <div id="loadingIndicator" class="hidden text-center py-8 sm:py-12">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-green-500"></div>
+        <p class="mt-4 text-gray-400 text-sm sm:text-base">Đang tải dữ liệu...</p>
     </div>
     
     <!-- League Table Container -->
-    <div id="standingsContainer">
+    <div id="standingsContainer" class="overflow-x-auto -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
         @if($standings && isset($standings['data']['standings']))
             @include('components.standings-table', ['standings' => $standings])
         @else
-            <div class="text-center py-12">
-                <p class="text-gray-400 text-lg">Vui lòng chọn giải đấu để xem bảng xếp hạng</p>
+            <div class="text-center py-8 sm:py-12">
+                <p class="text-gray-400 text-sm sm:text-base md:text-lg">Vui lòng chọn giải đấu để xem bảng xếp hạng</p>
             </div>
         @endif
     </div>

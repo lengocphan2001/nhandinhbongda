@@ -16,9 +16,9 @@
 <body class="bg-gray-900 text-white font-sans min-h-screen">
     @include('components.header')
     
-    <main class="container mx-auto px-4 py-6 max-w-7xl">
+    <main class="container mx-auto px-4 py-6 max-w-7xl overflow-x-hidden">
         <div class="flex flex-col lg:flex-row gap-6">
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
                 @yield('content')
             </div>
             <aside class="w-full lg:w-80 flex-shrink-0">

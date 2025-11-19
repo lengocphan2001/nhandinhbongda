@@ -7,38 +7,38 @@ use Illuminate\Support\Facades\Storage;
 @endphp
 
 @section('content')
-<div class="bg-gray-800 rounded-lg p-6">
+<div class="bg-gray-800 rounded-lg p-3 sm:p-4 md:p-6 overflow-hidden">
     <!-- Breadcrumb -->
-    <nav class="mb-4 text-sm">
+    <nav class="mb-3 sm:mb-4 text-xs sm:text-sm truncate">
         <a href="{{ route('bang-xep-hang') }}" class="text-green-400 hover:text-green-300">Trang chủ</a>
-        <span class="text-gray-500 mx-2">/</span>
+        <span class="text-gray-500 mx-1 sm:mx-2">/</span>
         <a href="{{ $post->type == 'tin-the-thao' ? route('tin-the-thao') : route('nhan-dinh-bong-da') }}" class="text-green-400 hover:text-green-300">
             {{ $post->type == 'tin-the-thao' ? 'Tin Thể Thao' : 'Nhận Định Bóng Đá' }}
         </a>
-        <span class="text-gray-500 mx-2">/</span>
-        <span class="text-gray-400">{{ $post->title }}</span>
+        <span class="text-gray-500 mx-1 sm:mx-2">/</span>
+        <span class="text-gray-400 truncate inline-block max-w-xs sm:max-w-none">{{ $post->title }}</span>
     </nav>
     
     <!-- Article Header -->
-    <header class="mb-6">
-        <div class="flex items-center gap-2 mb-4">
-            <span class="text-green-400 text-sm">{{ $post->type == 'tin-the-thao' ? 'Tin Thể Thao' : 'Nhận Định Bóng Đá' }}</span>
-            <span class="text-gray-500 text-sm">•</span>
-            <span class="text-gray-400 text-sm">{{ $post->created_at->format('d/m/Y H:i') }}</span>
+    <header class="mb-4 sm:mb-6">
+        <div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-3 sm:mb-4 text-xs sm:text-sm">
+            <span class="text-green-400">{{ $post->type == 'tin-the-thao' ? 'Tin Thể Thao' : 'Nhận Định Bóng Đá' }}</span>
+            <span class="text-gray-500">•</span>
+            <span class="text-gray-400">{{ $post->created_at->format('d/m/Y H:i') }}</span>
             @if($post->views > 0)
-            <span class="text-gray-500 text-sm">•</span>
-            <span class="text-gray-400 text-sm">{{ number_format($post->views) }} lượt xem</span>
+            <span class="text-gray-500">•</span>
+            <span class="text-gray-400">{{ number_format($post->views) }} lượt xem</span>
             @endif
         </div>
         
-        <h1 class="text-3xl font-bold text-white mb-4">{{ $post->title }}</h1>
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4 break-words">{{ $post->title }}</h1>
         
         @if($post->excerpt)
-        <p class="text-gray-300 text-lg leading-relaxed mb-4">{{ $post->excerpt }}</p>
+        <p class="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-3 sm:mb-4">{{ $post->excerpt }}</p>
         @endif
         
         @if($post->featured_image)
-        <div class="mb-6">
+        <div class="mb-4 sm:mb-6">
             <img src="{{ Storage::url($post->featured_image) }}" alt="{{ $post->title }}" class="w-full rounded-lg">
         </div>
         @endif
@@ -279,23 +279,23 @@ use Illuminate\Support\Facades\Storage;
     
     <!-- Related Posts -->
     @if($relatedPosts->count() > 0)
-    <div class="mt-12 pt-8 border-t border-gray-700">
-        <h2 class="text-2xl font-bold text-white mb-6">Bài viết liên quan</h2>
-        <div class="space-y-4">
+    <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-700">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6">Bài viết liên quan</h2>
+        <div class="space-y-3 sm:space-y-4">
             @foreach($relatedPosts as $relatedPost)
-            <article class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
+            <article class="bg-gray-700 rounded-lg p-3 sm:p-4 hover:bg-gray-600 transition-colors">
                 <a href="{{ route('post.show', $relatedPost->slug) }}" class="block">
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                         @if($relatedPost->featured_image)
-                        <div class="w-24 h-20 bg-gray-600 rounded flex-shrink-0 overflow-hidden">
+                        <div class="w-full sm:w-24 h-32 sm:h-20 bg-gray-600 rounded flex-shrink-0 overflow-hidden">
                             <img src="{{ Storage::url($relatedPost->featured_image) }}" alt="{{ $relatedPost->title }}" class="w-full h-full object-cover">
                         </div>
                         @endif
-                        <div class="flex-1">
-                            <h3 class="text-white font-semibold mb-1 hover:text-green-400 transition-colors">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-white font-semibold mb-1 hover:text-green-400 transition-colors text-sm sm:text-base line-clamp-2">
                                 {{ $relatedPost->title }}
                             </h3>
-                            <div class="flex items-center gap-2 text-xs text-gray-400">
+                            <div class="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-gray-400">
                                 <span>{{ $relatedPost->created_at->format('d/m/Y') }}</span>
                                 @if($relatedPost->views > 0)
                                 <span>•</span>
