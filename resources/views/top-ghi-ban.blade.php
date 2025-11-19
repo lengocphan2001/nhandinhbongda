@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="text-gray-300">${teamName}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-4 py-3 text-left">
                         <span class="text-green-400 font-bold text-lg">${goalsDisplay}</span>
                     </td>
                 </tr>
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <th class="px-4 py-3 text-left font-semibold">#</th>
                             <th class="px-4 py-3 text-left font-semibold">Tên cầu thủ</th>
                             <th class="px-4 py-3 text-left font-semibold">Tên đội</th>
-                            <th class="px-4 py-3 text-center font-semibold">Bàn thắng</th>
+                            <th class="px-4 py-3 text-left font-semibold">Bàn thắng</th>
                         </tr>
                     </thead>
                     <tbody>
