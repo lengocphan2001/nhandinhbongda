@@ -8,8 +8,22 @@ use Illuminate\Support\Facades\Cache;
 class SoccerApiService
 {
     private const BASE_URL = 'https://api.soccersapi.com/v2.2';
-    private const USER = 'Zr1NN';
-    private const TOKEN = 'HlxImHi2Xa';
+    
+    /**
+     * Get API user from environment or fallback to default
+     */
+    private function getUser(): string
+    {
+        return env('SOCCERSAPI_USER', 'Zr1NN');
+    }
+    
+    /**
+     * Get API token from environment or fallback to default
+     */
+    private function getToken(): string
+    {
+        return env('SOCCERSAPI_TOKEN', 'HlxImHi2Xa');
+    }
     
     /**
      * Get list of leagues from all pages (optimized with concurrent requests)
@@ -19,8 +33,8 @@ class SoccerApiService
         return Cache::remember('leagues_list_all', 3600, function () {
             // First, get page 1 to know total pages
             $firstResponse = Http::get(self::BASE_URL . '/leagues/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'list',
                 'page' => 1
             ]);
@@ -50,14 +64,16 @@ class SoccerApiService
             
             // Fetch remaining pages concurrently (in batches to avoid overwhelming)
             $batchSize = 5; // Fetch 5 pages at a time
+            $apiUser = $this->getUser();
+            $apiToken = $this->getToken();
             for ($startPage = 2; $startPage <= $totalPages; $startPage += $batchSize) {
                 $endPage = min($startPage + $batchSize - 1, $totalPages);
                 
-                $responses = Http::pool(function ($pool) use ($startPage, $endPage) {
+                $responses = Http::pool(function ($pool) use ($startPage, $endPage, $apiUser, $apiToken) {
                     for ($page = $startPage; $page <= $endPage; $page++) {
                         $pool->as("page_{$page}")->get(self::BASE_URL . '/leagues/', [
-                            'user' => self::USER,
-                            'token' => self::TOKEN,
+                            'user' => $apiUser,
+                            'token' => $apiToken,
                             't' => 'list',
                             'page' => $page
                         ]);
@@ -96,8 +112,8 @@ class SoccerApiService
     {
         return Cache::remember("standings_{$seasonId}", 300, function () use ($seasonId) {
             $response = Http::get(self::BASE_URL . '/leagues/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'standings',
                 'season_id' => $seasonId
             ]);
@@ -117,8 +133,8 @@ class SoccerApiService
     {
         return Cache::remember("team_info_{$teamId}", 3600, function () use ($teamId) {
             $response = Http::get(self::BASE_URL . '/teams/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'info',
                 'id' => $teamId
             ]);
@@ -165,11 +181,13 @@ class SoccerApiService
         
         // Fetch uncached logos concurrently
         if (!empty($uncachedIds)) {
-            $responses = Http::pool(function ($pool) use ($uncachedIds) {
+            $apiUser = $this->getUser();
+            $apiToken = $this->getToken();
+            $responses = Http::pool(function ($pool) use ($uncachedIds, $apiUser, $apiToken) {
                 foreach ($uncachedIds as $teamId) {
                     $pool->as("team_{$teamId}")->get(self::BASE_URL . '/teams/', [
-                        'user' => self::USER,
-                        'token' => self::TOKEN,
+                        'user' => $apiUser,
+                        'token' => $apiToken,
                         't' => 'info',
                         'id' => $teamId
                     ]);
@@ -223,8 +241,8 @@ class SoccerApiService
         return Cache::remember($cacheKey, 300, function () use ($date, $utc) {
             // First, get page 1 to know total pages
             $firstResponse = Http::get(self::BASE_URL . '/fixtures/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'schedule',
                 'include' => 'stats,odds,odds_prematch',
                 'utc' => $utc,
@@ -261,14 +279,16 @@ class SoccerApiService
             
             // Fetch remaining pages concurrently (in batches to avoid overwhelming)
             $batchSize = 5; // Fetch 5 pages at a time
+            $apiUser = $this->getUser();
+            $apiToken = $this->getToken();
             for ($startPage = 2; $startPage <= $totalPages; $startPage += $batchSize) {
                 $endPage = min($startPage + $batchSize - 1, $totalPages);
                 
-                $responses = Http::pool(function ($pool) use ($startPage, $endPage, $date, $utc) {
+                $responses = Http::pool(function ($pool) use ($startPage, $endPage, $date, $utc, $apiUser, $apiToken) {
                     for ($page = $startPage; $page <= $endPage; $page++) {
                         $pool->as("page_{$page}")->get(self::BASE_URL . '/fixtures/', [
-                            'user' => self::USER,
-                            'token' => self::TOKEN,
+                            'user' => $apiUser,
+                            'token' => $apiToken,
                             't' => 'schedule',
                             'include' => 'stats,odds,odds_prematch',
                             'utc' => $utc,
@@ -319,8 +339,8 @@ class SoccerApiService
         return Cache::remember($cacheKey, 300, function () use ($date, $utc) {
             // First, get page 1 to know total pages
             $firstResponse = Http::get(self::BASE_URL . '/fixtures/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'schedule',
                 'include' => 'stats,odds,odds_prematch',
                 'utc' => $utc,
@@ -357,14 +377,16 @@ class SoccerApiService
             
             // Fetch remaining pages concurrently (in batches to avoid overwhelming)
             $batchSize = 5; // Fetch 5 pages at a time
+            $apiUser = $this->getUser();
+            $apiToken = $this->getToken();
             for ($startPage = 2; $startPage <= $totalPages; $startPage += $batchSize) {
                 $endPage = min($startPage + $batchSize - 1, $totalPages);
                 
-                $responses = Http::pool(function ($pool) use ($startPage, $endPage, $date, $utc) {
+                $responses = Http::pool(function ($pool) use ($startPage, $endPage, $date, $utc, $apiUser, $apiToken) {
                     for ($page = $startPage; $page <= $endPage; $page++) {
                         $pool->as("page_{$page}")->get(self::BASE_URL . '/fixtures/', [
-                            'user' => self::USER,
-                            'token' => self::TOKEN,
+                            'user' => $apiUser,
+                            'token' => $apiToken,
                             't' => 'schedule',
                             'include' => 'stats,odds,odds_prematch',
                             'utc' => $utc,
@@ -410,8 +432,8 @@ class SoccerApiService
     {
         return Cache::remember("top_scorers_{$seasonId}", 300, function () use ($seasonId) {
             $response = Http::get(self::BASE_URL . '/leaders/', [
-                'user' => self::USER,
-                'token' => self::TOKEN,
+                'user' => $this->getUser(),
+                'token' => $this->getToken(),
                 't' => 'topscorers',
                 'season_id' => $seasonId
             ]);

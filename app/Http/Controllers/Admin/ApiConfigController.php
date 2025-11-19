@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 
 class ApiConfigController extends Controller
 {
@@ -56,6 +57,9 @@ class ApiConfigController extends Controller
             }
             
             File::put($envFile, $content);
+            
+            // Clear config cache to ensure new values are loaded
+            Artisan::call('config:clear');
         }
 
         return redirect()->route('admin.api-config.index')
