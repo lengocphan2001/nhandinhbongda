@@ -54,7 +54,7 @@
                             </td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3 text-center text-white font-semibold">{{ $team['overall']['points'] ?? 0 }}</td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                <div class="flex items-center justify-center gap-0.5 sm:gap-1 flex-wrap">
+                                <div class="flex items-center justify-center gap-0.5 sm:gap-1 flex-nowrap">
                                     @if(isset($team['recent_form']) && !empty($team['recent_form']))
                                         @foreach(str_split($team['recent_form']) as $result)
                                             @if($result === 'W')
@@ -123,7 +123,7 @@
                     </td>
                     <td class="px-2 sm:px-4 py-2 sm:py-3 text-center text-white font-semibold">{{ $team['overall']['points'] ?? 0 }}</td>
                     <td class="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                        <div class="flex items-center justify-center gap-0.5 sm:gap-1 flex-wrap">
+                        <div class="flex items-center justify-center gap-0.5 sm:gap-1 flex-nowrap">
                             @if(isset($team['recent_form']) && !empty($team['recent_form']))
                                 @foreach(str_split($team['recent_form']) as $result)
                                     @if($result === 'W')
